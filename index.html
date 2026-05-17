@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="大屏主控">
+    <title>大屏主控台</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 针对手机端竖屏优化的 CSS 补丁 */
+        body { padding: 10px; align-items: flex-start; overflow-y: auto; }
+        .dashboard-container { flex-direction: column; width: 100%; padding: 0; }
+        .sidebar { width: 100%; flex-direction: row; justify-content: space-around; padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .sidebar-btn { text-align: center; padding: 8px; font-size: 14px; }
+        .main-content { padding: 15px; }
+        .radio-group { flex-direction: column; gap: 10px; }
+        .tag-btn { flex: 1; min-width: 45%; text-align: center; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container glass-panel">
+        <div class="sidebar">
+            <button class="sidebar-btn active" onclick="switchTab('broadcastTab')">📢 广播</button>
+            <button class="sidebar-btn" onclick="switchTab('timerTab')">⏰ 定时</button>
+        </div>
+
+        <div class="main-content">
+            <div class="input-box">
+                <label>建立通信信道房间号：</label>
+                <input type="text" id="topic" class="glass-input" placeholder="输入大屏房间号">
+            </div>
+
+            <div id="broadcastTab" class="tab-content">
+                <div class="input-box">
+                    <input type="text" id="title" class="glass-input" placeholder="通知标题（选填）">
+                </div>
+                <textarea id="content" class="glass-textarea" style="height: 120px;" placeholder="输入投屏内容..."></textarea>
+                
+                <div style="margin-top: 15px;">
+                    <span style="font-size: 13px; font-weight: bold;">大屏呈现形态：</span>
+                    <div class="radio-group">
+                        <label><input type="radio" name="displayMode" value="[BANNER]" checked> 顶部下拉横幅</label>
+                        <label><input type="radio" name="displayMode" value="[FULLSCREEN]"> 全屏霸屏模式</label>
+                        <label><input type="radio" name="displayMode" value="[PERSIST]"> 🚨 强制确认霸屏</label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
+                    <button class="tag-btn" onclick="fill('上课铃','请同学们迅速回到座位准备上课。')">上课</button>
+                    <button class="tag-btn" onclick="fill('收交作业','请各组长现在收齐本组作业。')">收作业</button>
+                    <button class="tag-btn" style="width: 100%; border-color: #d63031; color: #d63031;" onclick="sendDirectCmd('[CLOSE_SCREEN]')">❌ 强制收起大屏</button>
+                </div>
+
+                <button class="btn-glass" style="margin-top: 25px;" onclick="executeSend()" id="sendBtn">立即发射广播</button>
+                <div id="statusText" style="text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold;"></div>
+            </div>
+
+            <div id="timerTab" class="tab-content" style="display: none;">
+                <p style="font-size: 13px; color: #666; text-align: center; margin-top: 20px;">手机端定时功能需要保持页面开启。建议直接发送实时广播。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 把你原来 teacher_ui.html 里的所有 <script> 代码粘贴到这里
+    </script>
+</body>
+</html>
