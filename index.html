@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>黄老师大屏主控台</title>
     <style>
-        /* 内置完全独立的轻奢白粉流光 UI，防止外部 css 污染 */
+        /* 内置轻奢粉白流光UI，100%独立运行 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
             width: 100%; height: 100%;
@@ -30,14 +30,15 @@
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-radius: 20px; border: 1px solid rgba(255, 255, 255, 1);
             box-shadow: 0 15px 40px rgba(251, 194, 235, 0.3);
-            overflow: hidden; pointer-events: auto !important; /* 强制允许点击 */
+            overflow: hidden;
+            position: relative; z-index: 999; /* 确保图层在最前 */
         }
         .header-banner {
             background: linear-gradient(135deg, rgba(251,194,235,0.5) 0%, rgba(166,193,238,0.4) 100%);
             padding: 30px 20px; text-align: center;
             border-bottom: 1px solid rgba(255, 182, 193, 0.3);
         }
-        .form-body { padding: 30px 20px; }
+        .form-body { padding: 30px 20px; position: relative; z-index: 1000; }
         .input-item { margin-bottom: 20px; }
         .input-item label { display: block; margin-bottom: 8px; font-size: 13px; color: #555; font-weight: bold; }
         .my-input, .my-textarea {
@@ -53,6 +54,7 @@
             font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;
             box-shadow: 0 6px 15px rgba(166, 193, 238, 0.4);
             display: block; text-align: center;
+            position: relative; z-index: 1001; /* 强制提升按钮触控优先级 */
         }
         .my-btn:active { transform: scale(0.98); opacity: 0.9; }
         .radio-cell { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; cursor: pointer; }
@@ -78,7 +80,7 @@
                 <input type="text" id="uid" class="my-input" placeholder="请输入账户" autocomplete="off">
             </div>
             <div class="input-item">
-                <input type="password" id="password" class="my-input" placeholder="请输入密码">
+                <input type="password" id="password" class="my-input" placeholder="请输入密码" autocomplete="new-password">
             </div>
             <button onclick="checkCredentials()" class="my-btn" style="margin-top: 10px;">安全验证进入</button>
         </div>
@@ -86,12 +88,12 @@
         <div id="controlView" class="form-body" style="display: none;">
             <div class="input-item">
                 <label>📡 本机绑定的信道房间号：</label>
-                <input type="text" id="topic" class="my-input" placeholder="须与大屏端一致，如 class_01">
+                <input type="text" id="topic" class="my-input" placeholder="须与大屏端一致，如 class_01" autocomplete="off">
             </div>
             
             <div class="input-item">
                 <label>📢 广播标题 (选填)：</label>
-                <input type="text" id="title" class="my-input" placeholder="例如：紧急通知">
+                <input type="text" id="title" class="my-input" placeholder="例如：紧急通知" autocomplete="off">
             </div>
 
             <div class="input-item">
@@ -111,4 +113,70 @@
                 <button class="pill-btn" style="border-color: #d63031; color: #d63031;" onclick="sendForceClose('[CLOSE_SCREEN]')">❌ 强制收起大屏</button>
             </div>
 
-            <button onclick="transmitSignal()" id="sendBtn" class="my-btn" style="margin-top: 30px; background: linear-gradient(135
+            <button onclick="transmitSignal()" id="sendBtn" class="my-btn" style="margin-top: 30px; background: linear-gradient(135deg, #ff7675 0%, #ff4d6d 100%);">🚀 立即发射全息广播</button>
+            <div id="statusTip" style="text-align: center; margin-top: 15px; font-size: 13px; font-weight: bold; min-height: 20px;"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function checkCredentials() {
+            const u = document.getElementById('uid').value.trim();
+            const p = document.getElementById('password').value.trim();
+
+            if (u === 'admin' && p === '20262026') {
+                document.getElementById('loginView').style.display = 'none';
+                document.getElementById('controlView').style.display = 'block';
+            } else {
+                alert('安全验证失败！请检查账户和密码。');
+            }
+        }
+
+        function quickFill(t, c) {
+            document.getElementById('title').value = t;
+            document.getElementById('content').value = c;
+        }
+
+        async function transmitSignal() {
+            const topic = document.getElementById('topic').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const mode = document.querySelector('input[name="displayMode"]:checked').value;
+
+            if (!topic) { alert("房间号不能为空！"); return; }
+            if (!content) { alert("通知内容不能为空！"); return; }
+
+            let payload = mode + (title ? `【${title}】` : "") + content;
+            pushToCloud(topic, payload);
+        }
+
+        function sendForceClose(cmd) {
+            const topic = document.getElementById('topic').value.trim();
+            if (!topic) { alert("请先填写房间号！"); return; }
+            pushToCloud(topic, cmd);
+        }
+
+        async function pushToCloud(room, data) {
+            const tip = document.getElementById('statusTip');
+            const btn = document.getElementById('sendBtn');
+            
+            tip.innerHTML = "<span style='color:#0984e3;'>📡 正在向云端信标发射波段...</span>";
+            btn.disabled = true;
+
+            try {
+                await fetch(`https://ntfy.sh/${room}`, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+                });
+                tip.innerHTML = "<span style='color:#00b894;'>✅ 信号发射成功！大屏正在响应。</span>";
+                document.getElementById('content').value = '';
+            } catch (e) {
+                tip.innerHTML = "<span style='color:#d63031;'>❌ 发射失败，请检查手机网络连通性。</span>";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
