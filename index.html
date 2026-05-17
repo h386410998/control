@@ -5,181 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="黄老师主控">
-    <title>黄老师大屏工具</title>
-    <link rel="stylesheet" href="style.css">
+    <title>黄老师大屏主控台</title>
+    <style>
+        /* 内置完全独立的轻奢白粉流光 UI，防止外部 css 污染 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%; height: 100%;
+            font-family: 'Microsoft YaHei', sans-serif;
+            color: #333;
+            background: linear-gradient(-45deg, #ffdeeb, #ffffff, #e3edff, #fff0f5);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding: 15px; overflow-y: auto;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container-box {
+            width: 100%; max-width: 480px; margin: auto; margin-top: 20px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 15px 40px rgba(251, 194, 235, 0.3);
+            overflow: hidden; pointer-events: auto !important; /* 强制允许点击 */
+        }
+        .header-banner {
+            background: linear-gradient(135deg, rgba(251,194,235,0.5) 0%, rgba(166,193,238,0.4) 100%);
+            padding: 30px 20px; text-align: center;
+            border-bottom: 1px solid rgba(255, 182, 193, 0.3);
+        }
+        .form-body { padding: 30px 20px; }
+        .input-item { margin-bottom: 20px; }
+        .input-item label { display: block; margin-bottom: 8px; font-size: 13px; color: #555; font-weight: bold; }
+        .my-input, .my-textarea {
+            width: 100%; padding: 14px; background: #ffffff;
+            border: 1px solid #e2e8f0; border-radius: 12px;
+            font-size: 15px; color: #1a1a1a; outline: none; transition: 0.3s;
+        }
+        .my-input:focus, .my-textarea:focus { border-color: #fbc2eb; box-shadow: 0 0 10px rgba(251, 194, 235, 0.5); }
+        .my-btn {
+            width: 100%; padding: 15px;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            border: none; border-radius: 12px; color: #ffffff;
+            font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 6px 15px rgba(166, 193, 238, 0.4);
+            display: block; text-align: center;
+        }
+        .my-btn:active { transform: scale(0.98); opacity: 0.9; }
+        .radio-cell { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; cursor: pointer; }
+        .radio-cell input { accent-color: #ff4d6d; width: 18px; height: 18px; }
+        .pill-box { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+        .pill-btn {
+            background: #ffffff; border: 1px solid #fbc2eb; color: #ff4d6d;
+            padding: 8px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold;
+        }
+    </style>
 </head>
-<body style="align-items: flex-start; padding: 15px; overflow-y: auto;">
+<body>
 
-    <div id="loginSection" class="main-card" style="margin: auto; max-width: 500px; height: auto; flex-direction: column; border-radius: 20px;">
-        <div class="left-zone" style="padding: 30px; border-right: none; border-bottom: 1px solid rgba(255, 182, 193, 0.3); border-radius: 20px 20px 0 0;">
-            <div style="font-size: 18px; font-weight: bold; color: #ff4d6d; display: flex; align-items: center; gap: 6px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                黄老师大屏工具
-            </div>
-            <div style="margin-top: 20px;">
-                <h1 style="font-size: 26px; color: #ff4d6d; font-weight: 800;">智慧校园广播网关</h1>
-                <p style="color:#7a7a7a; font-size: 13px; margin-top: 5px;">基于云端信标的瞬时投屏系统</p>
-            </div>
-            <div style="color:#aaa; font-size: 12px; margin-top: 15px;">黄老师QQ 386410998</div>
-        </div>
+    <div class="container-box">
         
-        <div class="right-zone" style="padding: 35px 30px; background: #ffffff; border-radius: 0 0 20px 20px;">
-            <h2 style="font-size: 22px; margin-bottom: 25px; color:#333; font-weight: 800;">登录：</h2>
-            <div class="input-box">
-                <input type="text" id="uid" class="glass-input" placeholder="输入账户 (admin)" autocomplete="off">
-            </div>
-            <div class="input-box">
-                <input type="password" id="password" class="glass-input" placeholder="输入密码 (20262026)">
-            </div>
-            <button onclick="handleLogin()" class="btn-glass" style="margin-top: 10px; width: 100%;">
-                安全验证进入
-            </button>
-        </div>
-    </div>
-
-    <div id="controlSection" class="dashboard-container glass-panel" style="display: none; max-width: 600px; margin: auto; flex-direction: column; height: auto;">
-        <div class="sidebar" style="width: 100%; flex-direction: row; justify-content: space-around; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); background: transparent;">
-            <div style="font-size: 16px; font-weight: 800; color: #ff4d6d; line-height: 38px; padding-left: 10px;">🌸 实时主控</div>
-            <div style="display: flex; gap: 5px;">
-                <button id="tab1" class="sidebar-btn active" onclick="switchTab('broadcastTab')">📢 投屏广播</button>
-                <button id="tab2" class="sidebar-btn" onclick="switchTab('timerTab')">⏰ 定时守护</button>
-            </div>
+        <div class="header-banner">
+            <h2 style="color: #ff4d6d; font-size: 24px; font-weight: 800; letter-spacing: 1px;">🌸 黄老师大屏工具</h2>
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">无线控制面板 · QQ 386410998</p>
         </div>
 
-        <div class="main-content" style="padding: 20px; width: 100%;">
-            <div class="input-box">
-                <label>建立通信信道房间号（须与大屏端一致）：</label>
-                <input type="text" id="topic" class="glass-input" placeholder="请和大屏幕端设置同一房间号，如 class_01">
+        <div id="loginView" class="form-body" style="display: block;">
+            <div class="input-item">
+                <input type="text" id="uid" class="my-input" placeholder="请输入账户" autocomplete="off">
             </div>
-
-            <div id="broadcastTab" class="tab-content">
-                <div class="input-box">
-                    <input type="text" id="title" class="glass-input" placeholder="通知标题 (选填，如：紧急通知)">
-                </div>
-                <textarea id="content" class="glass-textarea" style="height: 130px;" placeholder="输入你想在大屏上滚动并朗读的文字内容..."></textarea>
-                
-                <div style="margin-top: 15px;">
-                    <span style="font-size: 13px; font-weight: bold; color: #555;">大屏呈现形态：</span>
-                    <div class="radio-group" style="flex-direction: column; gap: 8px; margin-top: 8px;">
-                        <label><input type="radio" name="displayMode" value="[BANNER]" checked> 顶部全宽横幅 (自动收起)</label>
-                        <label><input type="radio" name="displayMode" value="[FULLSCREEN]"> 100%全屏霸屏 (自动收起)</label>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;">
-                    <button class="tag-btn" onclick="fillQuick('上课通知','请同学们迅速回到座位准备上课。')">🔔 上课</button>
-                    <button class="tag-btn" onclick="fillQuick('收交作业','请各组组长现在收齐本组作业交到讲台。')">📝 收作业</button>
-                    <button class="tag-btn" onclick="fillQuick('保持安静','请大家在教室里保持安静，认真自习。')">🤫 讲纪律</button>
-                    <button class="tag-btn" style="border-color: #d63031; color: #d63031;" onclick="sendDirectCmd('[CLOSE_SCREEN]')">❌ 强制关闭大屏</button>
-                </div>
-
-                <button class="btn-glass" style="margin-top: 25px; width: 100%; font-size: 17px;" onclick="executeSend()" id="sendBtn">✨ 立即发射全息广播</button>
-                <div id="statusText" style="text-align: center; margin-top: 15px; font-size: 13px; font-weight: bold; min-height: 20px;"></div>
+            <div class="input-item">
+                <input type="password" id="password" class="my-input" placeholder="请输入密码">
             </div>
-
-            <div id="timerTab" class="tab-content" style="display: none;">
-                <p style="font-size: 13px; color: #777; margin-bottom: 15px; line-height: 1.4;">⚠️ 提示：手机端定时任务需要保持该网页在手机前台开启。若手机锁屏，定时可能失效。建议优先使用实时广播。</p>
-                <div class="input-box">
-                    <label>设置触发时间点 (24小时制)</label>
-                    <input type="time" id="targetTime" class="glass-input" style="width: 150px;">
-                </div>
-                <div class="input-box">
-                    <label>定时动作</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="timerAction" value="text" checked> 播报文本</label>
-                        <label><input type="radio" name="timerAction" value="close"> 关闭大屏</label>
-                    </div>
-                </div>
-                <div class="input-box">
-                    <input type="text" id="timerText" class="glass-input" placeholder="输入定时发送的内容">
-                </div>
-                <button class="btn-glass" onclick="addScheduleTask()" style="width: 100%;">💾 部署定时守护任务</button>
-                <div id="taskList" style="margin-top:20px; font-size:13px; color:#ff758c; font-weight: bold;"></div>
-            </div>
+            <button onclick="checkCredentials()" class="my-btn" style="margin-top: 10px;">安全验证进入</button>
         </div>
-    </div>
 
-    <script>
-        let scheduleTasks = [];
-        let feedbackInterval = null;
-
-        // 1. 处理网关验证登录
-        function handleLogin() {
-            const uid = document.getElementById('uid').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            if (uid === 'admin' && password === '20262026') {
-                // 验证成功，流畅切换视图
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('controlSection').style.display = 'flex';
-            } else {
-                alert('安全凭证无效，请检查账户与密钥！');
-            }
-        }
-
-        // 2. 侧边/选项卡切换
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-            document.getElementById('tab1').classList.remove('active');
-            document.getElementById('tab2').classList.remove('active');
+        <div id="controlView" class="form-body" style="display: none;">
+            <div class="input-item">
+                <label>📡 本机绑定的信道房间号：</label>
+                <input type="text" id="topic" class="my-input" placeholder="须与大屏端一致，如 class_01">
+            </div>
             
-            document.getElementById(tabId).style.display = 'block';
-            if (tabId === 'broadcastTab') document.getElementById('tab1').classList.add('active');
-            if (tabId === 'timerTab') document.getElementById('tab2').classList.add('active');
-        }
+            <div class="input-item">
+                <label>📢 广播标题 (选填)：</label>
+                <input type="text" id="title" class="my-input" placeholder="例如：紧急通知">
+            </div>
 
-        // 3. 快捷填入
-        function fillQuick(t, c) {
-            document.getElementById('title').value = t;
-            document.getElementById('content').value = c;
-        }
+            <div class="input-item">
+                <label>💬 广播文本内容：</label>
+                <textarea id="content" class="my-textarea" style="height: 100px; resize: none;" placeholder="请输入需要在教室大屏显示的文字..."></textarea>
+            </div>
 
-        // 4. 定时守护轮询
-        setInterval(() => {
-            if (scheduleTasks.length === 0) return;
-            const now = new Date();
-            const currentStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            
-            scheduleTasks.forEach(task => {
-                if (task.time === currentStr && !task.fired) {
-                    task.fired = true;
-                    const topic = document.getElementById('topic').value.trim();
-                    const payload = task.action === 'close' ? '[CLOSE_SCREEN]' : `[BANNER]${task.text}`;
-                    sendPayload(topic, payload);
-                    setTimeout(() => task.fired = false, 62000); // 1分钟后释放锁
-                }
-            });
-        }, 1000);
+            <div class="input-item">
+                <label>🖥️ 大屏呈现形态：</label>
+                <label class="radio-cell"><input type="radio" name="displayMode" value="[BANNER]" checked> 顶部下拉横幅 (自动收起)</label>
+                <label class="radio-cell"><input type="radio" name="displayMode" value="[FULLSCREEN]"> 100%全屏霸屏 (自动收起)</label>
+            </div>
 
-        function addScheduleTask() {
-            const time = document.getElementById('targetTime').value;
-            const action = document.querySelector('input[name="timerAction"]:checked').value;
-            const text = document.getElementById('timerText').value.trim();
-            if (!time) { alert("请选择时间点！"); return; }
-            
-            scheduleTasks.push({ time, action, text, fired: false });
-            document.getElementById('taskList').innerHTML = scheduleTasks.map(t => 
-                `<div>⏰ 每天 ${t.time} -> ${t.action === 'close' ? '强制收起大屏' : '广播: ' + t.text}</div>`
-            ).join('');
-            alert("定时守护任务部署成功！");
-        }
+            <div class="pill-box">
+                <button class="pill-btn" onclick="quickFill('上课通知','请同学们迅速回到座位，准备上课。')">🔔 上课</button>
+                <button class="pill-btn" onclick="quickFill('收交作业','请各组组长现在收齐作业交到讲台。')">📝 收作业</button>
+                <button class="pill-btn" style="border-color: #d63031; color: #d63031;" onclick="sendForceClose('[CLOSE_SCREEN]')">❌ 强制收起大屏</button>
+            </div>
 
-        // 5. 实时无线发射信号
-        async function executeSend() {
-            const topic = document.getElementById('topic').value.trim();
-            const title = document.getElementById('title').value.trim();
-            const content = document.getElementById('content').value.trim();
-            const mode = document.querySelector('input[name="displayMode"]:checked').value;
-
-            if (!topic) { alert("信道房间号不能为空！"); return; }
-            if (!content) { alert("投屏广播内容不能为空！"); return; }
-
-            // 严丝合缝组装传输协议格式：形态标记+【标题】+正文
-            let msgPayload = mode + (title ? `【${title}】` : "") + content;
-            sendPayload(topic, msgPayload);
-        }
-
-        async function sendDirectCmd(cmd) {
-            const topic = document.getElementById('topic').value.trim();
-            if (!topic) { alert("请
+            <button onclick="transmitSignal()" id="sendBtn" class="my-btn" style="margin-top: 30px; background: linear-gradient(135
